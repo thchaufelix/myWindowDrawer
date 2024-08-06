@@ -1,35 +1,30 @@
 import pygame
 import sys
+import yaml
 
-BLACK = (0, 0, 0)
-WHITE = (200, 200, 200)
-WINDOW_HEIGHT = 400
-WINDOW_WIDTH = 400
+from core.layout.main_window import MainWindow
 
 
 def main():
-    global SCREEN, CLOCK
+    with open("setting.yml") as fp:
+        cfg = yaml.load(fp, Loader=yaml.FullLoader)
+
     pygame.init()
-    SCREEN = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    SCREEN = pygame.display.set_mode((cfg["window"]["WINDOW_WIDTH"], cfg["window"]["WINDOW_HEIGHT"]))
     CLOCK = pygame.time.Clock()
-    SCREEN.fill(BLACK)
+    SCREEN.fill((200, 200, 200))
+
+    mw = MainWindow()
 
     while True:
-        drawGrid()
+        mw.drawGrid(SCREEN)
         for event in pygame.event.get():
+
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
         pygame.display.update()
-
-
-def drawGrid():
-    blockSize = 40  # Set the size of the grid block
-    for x in range(0, WINDOW_WIDTH, blockSize):
-        for y in range(0, WINDOW_HEIGHT, blockSize):
-            rect = pygame.Rect(x, y, blockSize, blockSize)
-            pygame.draw.rect(SCREEN, WHITE, rect, 1)
 
 
 if __name__ == '__main__':
